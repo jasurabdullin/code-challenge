@@ -41,3 +41,15 @@ your browser. You should see a "Hello World" message.
 ## Help
 
 If you have any questions, feel free to reach out to your interview scheduler for clarification!
+
+## Sample Query Results
+**GET: http://localhost:3000/api/metrics/users/1/performance?startDate=2021-01-01&endDate=2021-12-31&interval=month**
+<img width="1104" alt="image" src="https://github.com/user-attachments/assets/08576033-9825-4012-bbde-694459fcfb77" />
+
+**GET: http://localhost:3000/api/metrics/users/performance**
+<img width="1087" alt="image" src="https://github.com/user-attachments/assets/3df44ad5-127c-4006-94b3-fc43a56f5b39" />
+
+**GET: http://localhost:3000/api/metrics/groups/:id/sales** (ID = 2)
+<img width="1083" alt="image" src="https://github.com/user-attachments/assets/bc1af502-74b4-4481-acd7-1f0e82c3f943" />
+
+
