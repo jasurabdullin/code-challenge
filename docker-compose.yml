@@ -1,0 +1,24 @@
+version: '3.5'
+services:
+  db:
+    container_name: 'actifai-takehome-db'
+    image: postgres:14
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: actifai
+    volumes:
+      - ./postgres-data:/var/lib/postgresql
+  api:
+    container_name: 'actifai-takehome-api'
+    build:
+      context: ./
+      dockerfile: Dockerfile_api
+    depends_on:
+      - db
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./:/usr/src/app

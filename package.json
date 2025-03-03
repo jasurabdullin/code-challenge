@@ -1,0 +1,14 @@
+{
+  "name": "actifai-engineering-takehome-app",
+  "version": "1.0.0",
+  "description": "Node server for the Actifai Engineering takehome test.",
+  "author": "Actifai Engineering",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "4.16.1",
+    "pg": "8.7.1"
+  }
+}
