@@ -41,23 +41,18 @@ async function listSales(req, res, pool) {
       sortOrder
     } = req.query;
     
-    // Validate pagination parameters
     const pagination = getPaginationParams(page, limit);
-    
-    // Validate dates
+
     const validStartDate = parseDate(startDate, null);
     const validEndDate = parseDate(endDate, null);
-    
-    // Validate sort parameters
+
     const validSortColumns = ['date', 'amount', 'user_id'];
     const validSortBy = validateSortColumn(sortBy, validSortColumns, 'date');
     const validSortOrder = validateSortOrder(sortOrder, 'desc');
     
-    // Validate amount filters
     const validMinAmount = minAmount ? Number.parseFloat(minAmount) : null;
     const validMaxAmount = maxAmount ? Number.parseFloat(maxAmount) : null;
     
-    // Build query conditions
     const conditions = [];
     const queryParams = [];
     let paramIndex = 1;
@@ -144,7 +139,6 @@ async function listSales(req, res, pool) {
     const countResult = await pool.query(countQuery, queryParams.slice(0, paramIndex - 1));
     const total = Number.parseInt(countResult.rows[0].count, 10);
     
-    // Format response
     res.json(formatPaginatedResponse(
       result.rows,
       pagination,

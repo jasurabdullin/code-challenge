@@ -10,7 +10,6 @@ const {
   validateInterval
 } = require('../lib/validations');
 
-
 /**
  * Get users in a specific group
  * 
@@ -35,15 +34,12 @@ async function getGroupUsers(req, res, pool) {
     
     const { page, limit, sortBy, sortOrder, role } = req.query;
     
-    // Validate group exists
     await validateResourceExists(pool, 'groups', groupId);
     
-    // Validate sort parameters
     const validSortColumns = ['name', 'role'];
     const validSortBy = validateSortColumn(sortBy, validSortColumns, 'name');
     const validSortOrder = validateSortOrder(sortOrder, 'asc');
     
-    // Build query conditions
     const conditions = ["ug.group_id = $1"];
     const queryParams = [groupId];
     let paramIndex = 2;
@@ -134,19 +130,15 @@ async function getGroupSales(req, res, pool) {
     
     const { startDate, endDate, page, limit, sortBy, sortOrder, userId } = req.query;
     
-    // Validate group exists
     await validateResourceExists(pool, 'groups', groupId);
     
-    // Validate dates
     const validStartDate = parseDate(startDate, null);
     const validEndDate = parseDate(endDate, null);
     
-    // Validate sort parameters
     const validSortColumns = ['date', 'amount', 'user_id'];
     const validSortBy = validateSortColumn(sortBy, validSortColumns, 'date');
     const validSortOrder = validateSortOrder(sortOrder, 'desc');
     
-    // Build query conditions
     const conditions = ["ug.group_id = $1"];
     const queryParams = [groupId];
     let paramIndex = 2;
@@ -169,7 +161,6 @@ async function getGroupSales(req, res, pool) {
       paramIndex++;
     }
     
-    // Get pagination parameters
     const pagination = getPaginationParams(page, limit);
     
     // Query for group sales
@@ -204,7 +195,6 @@ async function getGroupSales(req, res, pool) {
     const countResult = await pool.query(countQuery, queryParams.slice(0, paramIndex - 1));
     const total = Number.parseInt(countResult.rows[0].count, 10);
     
-    // Format response
     res.json(formatPaginatedResponse(
       result.rows,
       pagination,
@@ -249,14 +239,11 @@ async function getGroupSalesSummary(req, res, pool) {
     
     const { startDate, endDate } = req.query;
     
-    // Validate group exists
     await validateResourceExists(pool, 'groups', groupId);
     
-    // Validate dates
     const validStartDate = parseDate(startDate, null);
     const validEndDate = parseDate(endDate, null);
     
-    // Build query conditions
     const conditions = ["ug.group_id = $1"];
     const queryParams = [groupId];
     let paramIndex = 2;
@@ -360,14 +347,11 @@ async function getGroupPerformance(req, res, pool) {
     
     const { startDate, endDate, interval } = req.query;
     
-    // Validate group exists
     await validateResourceExists(pool, 'groups', groupId);
     
-    // Validate dates
     const validStartDate = parseDate(startDate, '2021-01-01');
     const validEndDate = parseDate(endDate, '2021-12-31');
     
-    // Validate interval
     const validInterval = validateInterval(interval, 'month');  
     
     // Query for performance over time
@@ -517,20 +501,15 @@ async function getAllGroupsPerformance(req, res, pool) {
       sortOrder
     } = req.query;
     
-    // Validate dates
     const validStartDate = parseDate(startDate, '2021-01-01');
     const validEndDate = parseDate(endDate, '2021-12-31');
-    
-    // Validate interval
-    const validIntervals = ['day', 'week', 'month', 'quarter', 'year'];
-    const validInterval = interval && validIntervals.includes(interval) ? interval : 'month';
-    
-    // Validate sort options
+
+    const validInterval = validateInterval(interval, 'month');
+
     const validSortColumns = ['total_revenue', 'average_revenue', 'sales_count', 'active_users', 'name'];
     const validSortBy = validateSortColumn(sortBy, validSortColumns, 'total_revenue');
     const validSortOrder = validateSortOrder(sortOrder, 'desc');
     
-    // Validate limit
     const validLimit = limit ? Number.parseInt(limit, 10) : 10;
     
     // Query for top performing groups

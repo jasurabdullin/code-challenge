@@ -241,14 +241,11 @@ async function getUserPerformance(req, res, pool) {
     
     const { startDate, endDate, interval } = req.query;
     
-    // Validate user exists
     await validateResourceExists(pool, 'users', userId);
     
-    // Validate dates
     const validStartDate = parseDate(startDate, '2021-01-01');
     const validEndDate = parseDate(endDate, '2021-12-31');
     
-    // Validate interval
     const validInterval = validateInterval(interval, 'month');
     
     // Query for performance over time
@@ -407,23 +404,15 @@ async function getAllUsersPerformance(req, res, pool) {
       sortOrder
     } = req.query;
     
-    // Validate dates
     const validStartDate = parseDate(startDate, '2021-01-01');
     const validEndDate = parseDate(endDate, '2021-12-31');
-    
-    // Validate interval
-    const validIntervals = ['day', 'week', 'month', 'quarter', 'year'];
-    const validInterval = interval && validIntervals.includes(interval) ? interval : 'month';
-    
-    // Validate sort options
+    const validInterval = validateInterval(interval, 'month');
     const validSortColumns = ['total_revenue', 'average_revenue', 'sales_count', 'name'];
     const validSortBy = validateSortColumn(sortBy, validSortColumns, 'total_revenue');
     const validSortOrder = validateSortOrder(sortOrder, 'desc');
     
-    // Validate limit
     const validLimit = limit ? Number.parseInt(limit, 10) : 10;
     
-    // Build query conditions
     const conditions = [];
     const queryParams = [validStartDate, validEndDate];
     let paramIndex = 3;
@@ -527,7 +516,6 @@ async function getAllUsersPerformance(req, res, pool) {
     const roleParams = [validStartDate, validEndDate];
     if (groupId) roleParams.push(groupId);
     
-    // Execute queries
     const [topPerformersResult, trendsResult, roleBreakdownResult] = await Promise.all([
       pool.query(topPerformersQuery, queryParams),
       pool.query(trendsQuery, trendsParams),
